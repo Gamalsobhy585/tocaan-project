@@ -1,0 +1,32 @@
+services:
+  laravel:
+    container_name: laravel-template-app
+    volumes:
+      - .:/var/www/html
+    env_file:
+      - .env
+
+  nginx:
+    container_name: laravel-template-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+
+  mysql:
+    container_name: laravel-template-mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ${DB_DATABASE:-my_template}
+    ports:
+      - "3306:3306"
+
+  redis:
+    container_name: laravel-template-redis
+    ports:
+      - "6379:6379"
+
+  elasticsearch:
+    container_name: laravel-template-elasticsearch
+    ports:
+      - "9200:9200"

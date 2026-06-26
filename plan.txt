@@ -1,0 +1,10 @@
+commands 
+traits
+make branches (marline flow)
+authentication system 
+biometric login 
+logging daily 
+argon2id
+readme
+structure of folders
+

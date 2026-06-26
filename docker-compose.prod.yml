@@ -1,0 +1,37 @@
+services:
+  nginx:
+    container_name: laravel-template-nginx-prod
+    ports:
+      - "80:80"
+    volumes:
+      - app_public:/var/www/html/public:ro
+    restart: always
+
+  laravel:
+    container_name: laravel-template-app-prod
+    env_file:
+      - .env
+    volumes:
+      - app_public:/var/www/html/public
+    restart: always
+
+  mysql:
+    container_name: laravel-template-mysql-prod
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    restart: always
+
+  redis:
+    container_name: laravel-template-redis-prod
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+    restart: always
+
+  elasticsearch:
+    container_name: laravel-template-elasticsearch-prod
+    restart: always
+
+volumes:
+  app_public:
