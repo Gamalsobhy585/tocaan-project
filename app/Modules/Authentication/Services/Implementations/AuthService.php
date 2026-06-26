@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-
-
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthService implements IAuthService
 {
@@ -27,16 +27,15 @@ class AuthService implements IAuthService
             if ($this->userRepo->getByEmail($request->email)) {
                 throw new \Exception(__('messages.register.email_exists'), 422);
             }
-            
+
             DB::beginTransaction();
-          
-            $user = [
-                "name" => $request->name,
-                "email" => $request->email,
-                "password" => Hash::make($request->password),
-            ];
-            $storedUser = $this->userRepo->store($user);
-           
+
+            $storedUser = $this->userRepo->store([
+                'name'     => $request->name,
+                'email'    => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
             DB::commit();
             return $storedUser;
         } catch (\Exception $e) {
@@ -47,37 +46,44 @@ class AuthService implements IAuthService
 
     public function login($request)
     {
-        $user = $this->userRepo->getByEmail($request->email);
-        if (!$user) {
+        $credentials = $request->only('email', 'password');
+
+        try {
+            // Attempt to create a JWT from credentials directly
+            $token = JWTAuth::attempt($credentials);
+        } catch (JWTException $e) {
+            throw new \Exception(__('messages.login.token_error'), 500);
+        }
+
+        if (!$token) {
             throw new \Exception(__('messages.login.invalid_credentials'), 401);
         }
 
-        if (!Hash::check($request->password, $user->password)) {
-            throw new \Exception(__('messages.login.invalid_credentials'), 401);
-        }
-
-        $token = $user->createToken('default_token');
-        $user->token = $token->plainTextToken;
+        $user = JWTAuth::user();
 
         return [
-            'token' => $user->token,
+            'token'     => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60, // seconds
             'user_data' => new UserResource($user),
         ];
     }
 
     public function logout($request)
     {
-        $user = $request->user();
-        if ($user) {
-            $user->currentAccessToken()->delete();
+        try {
+            // Invalidates the token so it can never be used again
+            JWTAuth::invalidate(JWTAuth::getToken());
             return true;
+        } catch (JWTException $e) {
+            return false;
         }
-        return false;
     }
 
     public function updateoldPassword($email, $oldPassword, $newPassword)
     {
         $user = $this->userRepo->getByEmail($email);
+
         if (!$user) {
             throw new \Exception(__('messages.renew.user_not_found'), 404);
         }
@@ -95,21 +101,14 @@ class AuthService implements IAuthService
     public function getUserInfo($request)
     {
         try {
-            $user = $this->userRepo->getUserInfo(); 
-            
-            $cacheKey = 'user:info:' . $user->id;
-            
-            return Cache::remember($cacheKey, now()->addHours(1), function() use ($user) {
+            $user = $this->userRepo->getUserInfo();
+
+            return Cache::remember('user:info:' . $user->id, now()->addHour(), function () use ($user) {
                 return new UserResource($user);
             });
-            
         } catch (\Exception $e) {
             Log::error('Failed to get user info: ' . $e->getMessage());
             throw new \Exception(__('messages.user.not_found'), 404);
         }
     }
-
 }
-
-
-

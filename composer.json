@@ -16,7 +16,8 @@
         "maatwebsite/excel": "^3.1",
         "predis/predis": "^3.4",
         "spatie/laravel-activitylog": "^4.12",
-        "spatie/laravel-permission": "^6.25"
+        "spatie/laravel-permission": "^6.25",
+        "tymon/jwt-auth": "^2.3"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.7",

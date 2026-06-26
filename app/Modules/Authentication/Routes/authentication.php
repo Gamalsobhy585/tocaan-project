@@ -1,13 +1,15 @@
 <?php
+use App\Modules\Authentication\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
 
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login',    [AuthController::class, 'login']);
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/user', [AuthController::class, 'getUserInfo']);
+    Route::middleware('auth:api')->group(function () {    // ← jwt guard
+        Route::post('logout',          [AuthController::class, 'logout']);
+        Route::post('renew-password',  [AuthController::class, 'renewPassword']);
+        Route::get('me',               [AuthController::class, 'getUserInfo']);
+    });
 });
