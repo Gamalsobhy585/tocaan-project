@@ -11,3 +11,9 @@ Route::middleware(['lang', 'cors'])->group(function () {
 require app_path('Modules/Currency/Routes/api.php');
 
 require app_path('Modules/Product/Routes/api.php');
+
+require app_path('Modules/Order/Routes/api.php');
+
+require app_path('Modules/PaymentMethod/Routes/api.php');
+
+require app_path('Modules/Payment/Routes/api.php');
