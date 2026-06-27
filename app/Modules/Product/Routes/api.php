@@ -16,10 +16,6 @@ Route::middleware('auth:api')
         Route::post('import-bulk', 'importBulk')
             ->name('products.import-bulk');
 
-        /*
-         * Keep this route before {product}.
-         * Otherwise "delete-bulk" could be treated as a product value.
-         */
         Route::delete('delete-bulk', 'deleteBulk')
             ->name('products.delete-bulk');
 

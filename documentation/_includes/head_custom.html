@@ -1,0 +1,205 @@
+<style>
+/* Force dark theme */
+:root, [data-color-mode="dark"] {
+  --body-background-color: #0e0f12 !important;
+  --sidebar-color: #0b0c0f !important;
+  --body-text-color: #e6e6e6 !important;
+  --link-color: #8ab4f8 !important;
+  --nav-child-link-color: #c9c9c9 !important;
+  --search-background-color: #111217 !important;
+}
+
+/* Background logo watermark */
+.main-content-wrap::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  max-width: 800px;
+  height: 60vh;
+  background-image: url('/documentation-of-warehouse/assets/images.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.1;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Dark overlay on background */
+.main-content-wrap::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(14, 15, 18, 0.95) 0%,
+    rgba(14, 15, 18, 0.85) 50%,
+    rgba(14, 15, 18, 0.95) 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure content is above the background */
+.main-content,
+.main-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fix sidebar and content spacing */
+.side-bar {
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: #0b0c0f !important;
+  border-right: 1px solid #2a2a2a !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Remove large gap between sidebar and content */
+.main {
+  margin-left: 0 !important;
+  position: relative;
+}
+
+@media (min-width: 50rem) {
+  .side-bar {
+    width: 248px !important;
+    min-width: 248px !important;
+    flex: 0 0 248px !important;
+  }
+  
+  .main {
+    margin-left: 248px !important;
+    max-width: calc(100% - 248px) !important;
+  }
+  
+  .main-content-wrap {
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    padding: 2rem 3rem !important;
+  }
+}
+
+@media (min-width: 66.5rem) {
+  .side-bar { 
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+  }
+  
+  .main {
+    margin-left: 248px !important;
+  }
+  
+  .main-content-wrap {
+    max-width: 900px !important;
+    padding: 2rem 4rem !important;
+  }
+}
+
+/* Dark theme for all elements */
+body {
+  background-color: #0e0f12 !important;
+  color: #e6e6e6 !important;
+}
+
+.site-header {
+  background-color: #0b0c0f !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  position: relative;
+  z-index: 10;
+}
+
+.site-footer {
+  background-color: #0b0c0f !important;
+  border-top: 1px solid #2a2a2a !important;
+  color: #c9c9c9 !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Logo styling */
+.site-logo {
+  max-height: 50px !important;
+  max-width: 150px !important;
+  display: block !important;
+}
+
+/* Search styling */
+.search-input {
+  background-color: #111217 !important;
+  color: #e6e6e6 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+.search-results {
+  background-color: #0b0c0f !important;
+  border: 1px solid #2a2a2a !important;
+  z-index: 100;
+}
+
+/* Navigation links */
+.nav-list .nav-list-item .nav-list-link {
+  color: #c9c9c9 !important;
+}
+
+.nav-list .nav-list-item .nav-list-link:hover,
+.nav-list .nav-list-item .nav-list-link.active {
+  color: #ffffff !important;
+  background-color: #1a1b1f !important;
+}
+
+/* Code blocks */
+code {
+  background-color: #1a1b1f !important;
+  color: #e6e6e6 !important;
+}
+
+pre {
+  background-color: #1a1b1f !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+/* Tables */
+table {
+  background-color: #0e0f12 !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+th {
+  background-color: #1a1b1f !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+td {
+  border: 1px solid #2a2a2a !important;
+}
+
+/* Blockquotes */
+blockquote {
+  background-color: #1a1b1f !important;
+  border-left: 4px solid #8ab4f8 !important;
+  color: #c9c9c9 !important;
+}
+a.site-button{
+    color: #000000;
+    background: #ffffff;
+    font-size: 18px;
+}
+
+</style>
+
+<!-- Force color mode to dark -->
+<script>
+  document.documentElement.setAttribute('data-color-mode', 'dark');
+</script>

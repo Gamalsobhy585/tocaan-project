@@ -1,0 +1,57 @@
+title: ERP Warehouse Developer Guide
+description: Internal documentation for the Warehouse module (Laravel 10)
+url: "https://gamalsobhy585.github.io"
+baseurl: "/documentation-of-warehouse"
+
+# Theme configuration
+remote_theme: just-the-docs/just-the-docs
+color_scheme: dark
+
+# Plugins
+plugins:
+  - jekyll-remote-theme
+
+# Search
+search_enabled: true
+search:
+  heading_level: 2
+  previews: 3
+  preview_words_before: 5
+  preview_words_after: 10
+  tokenizer_separator: /[\s/]+/
+  rel_url: true
+  button: false
+
+# Navigation
+heading_anchors: true
+
+
+# External links
+aux_links:
+  "View on GitHub": "https://github.com/EECWebTeam/erp-live"
+
+# Footer
+footer_content: "© 2025 EEC. All rights reserved."
+nav_enabled: true
+nav_sort: case_insensitive
+exclude:
+  - node_modules/
+  - vendor/
+
+# Navigation options
+nav_external_links:
+  - title: ERP Portal
+    url: https://eecgroup.online/erp/
+
+# Markdown configuration
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+permalink: pretty
+
+favicon_ico: "{{ '/assets/images.png' }}"
