@@ -1,59 +1,940 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tocaan Project API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modular REST API built with **Laravel 13** as a technical assessment for **Tocaan Company**.
 
-## About Laravel
+The project provides authentication, product and currency master data, order management, payment-method management, and payment processing using an extensible gateway architecture.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Project Links
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* **GitHub Repository:** [Gamalsobhy585/tocaan-project](https://github.com/Gamalsobhy585/tocaan-project)
+* **API Documentation:** [Tocaan Project Documentation](https://gamalsobhy585.github.io/tocaan-project/)
+* **Postman Workspace:** [Tocaan API Workspace](https://martian-shadow-736975.postman.co/workspace/1fe9452d-f7b9-4ca3-a0a5-8e15ccfa4db8)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Project Scope
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+The project implements a backend API for managing:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* User authentication using JWT
+* Product master data
+* Currency master data
+* Orders
+* Order items
+* Payment methods
+* Payments
+* Payment-gateway processing
+* Standardized API responses
+* Request validation
+* Database seeders
+* Modular business logic
 
-## Laravel Sponsors
+The application is API-based and does not include a frontend user interface.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Requirements
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Before installing the project, make sure the following tools are available:
 
-## Contributing
+* PHP compatible with the version required in `composer.json`
+* Composer
+* MySQL
+* Git
+* A local web server or Laravel development server
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Optional tools:
 
-## Code of Conduct
+* Postman
+* Docker
+* Node.js and npm, if frontend assets are required
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Installation
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Gamalsobhy585/tocaan-project.git
+```
+
+Move into the project directory:
+
+```bash
+cd tocaan-project
+```
+
+### 2. Install PHP dependencies
+
+```bash
+composer install
+```
+
+### 3. Create the environment file
+
+For Linux or macOS:
+
+```bash
+cp .env.example .env
+```
+
+For Windows Command Prompt:
+
+```cmd
+copy .env.example .env
+```
+
+For Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+### 4. Generate the application key
+
+```bash
+php artisan key:generate
+```
+
+### 5. Configure the database
+
+Update the database configuration in `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tocaan_project
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Create the configured database before running the migrations.
+
+### 6. Generate the JWT secret
+
+```bash
+php artisan jwt:secret
+```
+
+This command adds the JWT secret to the `.env` file.
+
+### 7. Run migrations and seeders
+
+```bash
+php artisan migrate --seed
+```
+
+To rebuild the database completely:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+### 8. Clear cached configuration
+
+```bash
+php artisan optimize:clear
+```
+
+### 9. Start the application
+
+```bash
+php artisan serve
+```
+
+The local API will normally be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+## Environment Configuration
+
+
+
+
+## Main Features
+
+### Authentication
+
+The Authentication module provides JWT-based authentication.
+
+Main operations include:
+
+* Register
+* Login
+* Logout
+* Refresh token
+* Retrieve authenticated user information
+
+Protected endpoints require a valid JWT token.
+
+Example authorization header:
+
+```http
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+---
+
+### Currency Master Data
+
+The Currency module manages the currencies used by products, orders, and payments.
+
+Main operations include:
+
+* Create a currency
+* View currencies
+* View a specific currency
+* Update a currency
+* Delete a currency
+* Seed initial currency records
+
+---
+
+### Product Master Data
+
+The Product module manages the products available for ordering.
+
+A product may contain information such as:
+
+* Arabic name
+* English name
+* Product code
+* Available stock quantity
+* Unit price
+* Associated currency
+
+Main operations include:
+
+* Create a product
+* View products
+* Filter and paginate products
+* View a specific product
+* Update a product
+* Delete a product
+* Import product data
+* Seed initial product records
+
+---
+
+### Order Management
+
+The Order module handles order creation and order-item management.
+
+Main operations include:
+
+* Create an order
+* View all orders
+* Filter orders by status
+* View a specific order
+* Update an order
+* Delete an order
+
+An order contains one or more order items.
+
+Each order item stores information such as:
+
+* Product
+* Quantity
+* Unit price
+* Line total
+
+Product information can be retrieved through the product relation.
+
+---
+
+### Payment Methods
+
+The Payment Method module manages the payment methods supported by the application.
+
+Examples include:
+
+* Credit card
+* PayPal
+* Cash
+* Other configured gateways
+
+A payment method can be connected to a gateway strategy using a strategy key.
+
+This allows the application to select the correct payment-processing logic dynamically.
+
+---
+
+### Payment Processing
+
+The Payment module handles payment operations for orders.
+
+Main operations include:
+
+* Process a payment for an order
+* View all payments
+* View payments associated with a specific order
+* Track payment status
+* Store gateway responses
+* Store transaction references
+* Store failure reasons
+
+Supported payment statuses include:
+
+* Pending
+* Successful
+* Failed
+
+Payment statuses are stored using numeric enums instead of string values.
+
+---
+
+## Architecture
+
+The project follows a modular architecture.
+
+Each business area is separated into its own module under:
+
+```text
+app/Modules/
+```
+
+The main modules are:
+
+```text
+app/Modules/
+├── Authentication/
+├── Currency/
+├── Order/
+├── Payment/
+├── PaymentMethod/
+└── Product/
+```
+
+A module may contain:
+
+```text
+ModuleName/
+├── Controllers/
+├── DTOs/
+├── Exceptions/
+├── Gateways/
+├── Imports/
+├── Listeners/
+├── Providers/
+├── Repositories/
+│   ├── Interfaces/
+│   └── Implementation/
+├── Requests/
+├── Resources/
+├── Routes/
+└── Services/
+    ├── Interfaces/
+    └── Implementation/
+```
+
+This structure keeps controllers, business logic, database access, validation, resources, and module routes separated.
+
+---
+
+## Design Patterns
+
+### Service Pattern
+
+Services contain application business logic.
+
+Controllers communicate with service interfaces instead of directly implementing business operations.
+
+Example:
+
+```php
+public function __construct(
+    private readonly IOrderService $service
+) {
+}
+```
+
+Benefits include:
+
+* Smaller controllers
+* Reusable business logic
+* Easier unit testing
+* Clear separation of responsibilities
+
+---
+
+### Repository Pattern
+
+Repositories are responsible for database-access logic.
+
+Services communicate with repository interfaces rather than directly depending on Eloquent queries.
+
+Example structure:
+
+```text
+Repositories/
+├── Interfaces/
+│   └── IProductRepository.php
+└── Implementation/
+    └── ProductRepository.php
+```
+
+Benefits include:
+
+* Centralized database queries
+* Reduced duplication
+* Easier testing
+* Lower coupling between business logic and data access
+
+---
+
+### Strategy Pattern
+
+Payment gateways use the Strategy pattern.
+
+Each payment gateway implements a shared contract:
+
+```php
+PaymentGatewayStrategy
+```
+
+The contract defines the gateway key and payment-processing operation.
+
+Example:
+
+```php
+interface PaymentGatewayStrategy
+{
+    public function key(): string;
+
+    public function process(
+        PaymentGatewayContext $context
+    ): PaymentGatewayResult;
+}
+```
+
+The payment service selects the required gateway based on the payment method's strategy key.
+
+This design allows new gateways to be added without modifying the main payment-processing logic.
+
+---
+
+## Adding a New Payment Gateway
+
+To add a new payment gateway:
+
+1. Create a gateway class inside:
+
+```text
+app/Modules/Payment/Gateways/
+```
+
+2. Implement:
+
+```php
+PaymentGatewayStrategy
+```
+
+3. Define a unique gateway key:
+
+```php
+public function key(): string
+{
+    return 'new_gateway';
+}
+```
+
+4. Implement the gateway processing logic:
+
+```php
+public function process(
+    PaymentGatewayContext $context
+): PaymentGatewayResult {
+    // Gateway processing logic
+}
+```
+
+5. Return either a successful or failed gateway result.
+
+Example successful result:
+
+```php
+return PaymentGatewayResult::success(
+    transactionReference: 'TRANSACTION_REFERENCE',
+    response: [
+        'message' => 'Payment processed successfully',
+    ]
+);
+```
+
+6. Register the strategy in the payment service provider or gateway registry.
+
+7. Add or update the related payment-method record with the same strategy key.
+
+This process keeps gateway-specific logic isolated from the payment service.
+
+---
+
+## Request Flow
+
+A typical API request follows this flow:
+
+```text
+HTTP Request
+    ↓
+Route
+    ↓
+Form Request Validation
+    ↓
+Controller
+    ↓
+Service Interface
+    ↓
+Service Implementation
+    ↓
+Repository Interface
+    ↓
+Repository Implementation
+    ↓
+Eloquent Model
+    ↓
+Database
+    ↓
+API Resource
+    ↓
+JSON Response
+```
+
+For payment processing, the flow includes the gateway strategy:
+
+```text
+Payment Controller
+    ↓
+Payment Service
+    ↓
+Payment Repository
+    ↓
+Payment Gateway Resolver
+    ↓
+Selected Gateway Strategy
+    ↓
+Gateway Result
+    ↓
+Payment Status Update
+    ↓
+JSON Response
+```
+
+---
+
+## Technology Stack
+
+* PHP
+* Laravel 13
+* MySQL
+* JWT Authentication
+* Eloquent ORM
+* Laravel Form Requests
+* Laravel API Resources
+* Laravel Service Container
+* PHPUnit
+* Postman
+* Jekyll
+* Just the Docs
+* GitHub Pages
+* GitHub Actions
+
+---
+Important environment variables include:
+
+```env
+APP_NAME="Tocaan Project"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tocaan_project
+DB_USERNAME=root
+DB_PASSWORD=
+
+JWT_SECRET=
+```
+
+Do not commit the `.env` file or expose database passwords and JWT secrets.
+
+---
+
+## API Usage
+
+The project exposes REST API endpoints through Laravel route files.
+
+The complete endpoint collection is available in the Postman workspace:
+
+[Open the Tocaan Postman Workspace](https://martian-shadow-736975.postman.co/workspace/1fe9452d-f7b9-4ca3-a0a5-8e15ccfa4db8)
+
+For authenticated requests, include:
+
+```http
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+The exact endpoint paths and request payloads are documented in Postman and in:
+
+```text
+documentation/api/API_REFERENCE.md
+```
+
+---
+
+## API Response Format
+
+The project uses a consistent JSON-response structure.
+
+Example successful response:
+
+```json
+{
+    "success": true,
+    "message": "Operation completed successfully",
+    "data": {}
+}
+```
+
+Example validation-error response:
+
+```json
+{
+    "success": false,
+    "message": "Validation failed",
+    "errors": {
+        "field": [
+            "The field is required."
+        ]
+    }
+}
+```
+
+The exact response may vary depending on the endpoint and returned API resource.
+
+---
+
+## Database
+
+The project uses migrations, models, relations, factories, and seeders.
+
+Main database entities include:
+
+* Users
+* Currencies
+* Products
+* Orders
+* Order items
+* Payment methods
+* Payments
+
+Main relationships include:
+
+```text
+User
+└── has many Orders
+
+Order
+├── belongs to User
+├── has many Order Items
+└── has many Payments
+
+Order Item
+├── belongs to Order
+└── belongs to Product
+
+Product
+└── belongs to Currency
+
+Payment
+├── belongs to Order
+└── belongs to Payment Method
+```
+
+The exact relationships should be checked in the project's Eloquent models.
+
+---
+
+## Enums
+
+Application statuses are represented using PHP enum classes.
+
+Numeric enum values are used instead of storing status names directly in the database.
+
+Examples include:
+
+* Order status
+* Payment status
+* Other module-specific statuses
+
+This approach provides:
+
+* Consistent status values
+* Type safety
+* Centralized status definitions
+* Easier validation
+* Reduced string duplication
+
+---
+
+## Validation
+
+Each module uses Laravel Form Request classes.
+
+Example structure:
+
+```text
+Requests/
+├── StoreProductRequest.php
+├── UpdateProductRequest.php
+├── StoreOrderRequest.php
+└── ProcessPaymentRequest.php
+```
+
+Controllers use validated data only:
+
+```php
+$data = $request->validated();
+```
+
+This keeps validation logic outside controllers.
+
+---
+
+## API Resources
+
+Laravel API Resources are used to control the JSON representation of models.
+
+Example structure:
+
+```text
+Resources/
+├── ProductResource.php
+├── OrderResource.php
+├── PaymentMethodResource.php
+└── PaymentResource.php
+```
+
+Resources help prevent exposing unnecessary model fields and keep API responses consistent.
+
+---
+
+## Testing
+
+Run all automated tests:
+
+```bash
+php artisan test
+```
+
+Run tests with more detailed output:
+
+```bash
+php artisan test --testdox
+```
+
+Run a specific test class:
+
+```bash
+php artisan test --filter=PaymentTest
+```
+
+Recommended test coverage includes:
+
+* Authentication
+* Currency operations
+* Product operations
+* Order creation and updates
+* Order status filtering
+* Payment-method management
+* Successful payment processing
+* Failed payment processing
+* Gateway-strategy resolution
+* Adding a new payment gateway
+* Validation errors
+* Unauthorized access
+
+---
+
+## Documentation Structure
+
+The project documentation is stored in:
+
+```text
+documentation/
+```
+
+Current structure:
+
+```text
+documentation/
+├── _config.yml
+├── index.md
+├── _includes/
+├── assets/
+├── getting-started/
+│   └── INSTALLATION.md
+├── project/
+│   ├── PROJECT_SCOPE.md
+│   ├── ARCHITECTURE.md
+│   └── ASSUMPTIONS.md
+├── modules/
+│   ├── AUTHENTICATION_MODULE.md
+│   ├── CURRENCY_MASTER_DATA.md
+│   ├── PRODUCT_MASTER_DATA.md
+│   ├── ORDER_MODULE.md
+│   └── PAYMENT_MODULE.md
+├── api/
+│   └── API_REFERENCE.md
+└── testing/
+    └── TESTING.md
+```
+
+The documentation is published using:
+
+* Jekyll
+* Just the Docs
+* GitHub Pages
+* GitHub Actions
+
+Published documentation URL:
+
+https://gamalsobhy585.github.io/tocaan-project/
+
+---
+
+## GitHub Pages Deployment
+
+The project uses a custom GitHub Actions workflow because the documentation source is stored inside:
+
+```text
+documentation/
+```
+
+The workflow file should exist at:
+
+```text
+.github/workflows/documentation-pages.yml
+```
+
+To deploy the documentation:
+
+1. Push the documentation and workflow files to the `main` branch.
+2. Open the GitHub repository.
+3. Go to **Settings**.
+4. Open **Pages**.
+5. Select **GitHub Actions** as the publishing source.
+6. Open the **Actions** tab.
+7. Check that the build and deployment jobs complete successfully.
+
+The published website will be available at:
+
+```text
+https://gamalsobhy585.github.io/tocaan-project/
+```
+
+---
+
+## Useful Artisan Commands
+
+Clear application caches:
+
+```bash
+php artisan optimize:clear
+```
+
+Run database migrations:
+
+```bash
+php artisan migrate
+```
+
+Run migrations with seeders:
+
+```bash
+php artisan migrate --seed
+```
+
+Rebuild and seed the database:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+Display registered routes:
+
+```bash
+php artisan route:list
+```
+
+Display API routes:
+
+```bash
+php artisan route:list --path=api
+```
+
+Run tests:
+
+```bash
+php artisan test
+```
+
+Start the development server:
+
+```bash
+php artisan serve
+```
+
+---
+
+## Project Principles
+
+The project follows these engineering principles:
+
+* Separation of concerns
+* Dependency inversion
+* Interface-based dependencies
+* Thin controllers
+* Reusable services
+* Centralized database access
+* Request validation
+* Controlled API responses
+* Extensible payment gateways
+* Module isolation
+* Numeric enum values
+* Consistent code organization
+
+---
+
+## Assessment Notes
+
+This project was developed as a technical assessment for Tocaan Company.
+
+The implementation focuses on:
+
+* Clean architecture
+* High modularity
+* Clear responsibility boundaries
+* Maintainable business logic
+* Extensible payment processing
+* Consistent API design
+* Testable services and repositories
+* Clear technical documentation
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project was created for technical-assessment purposes.
+
+Usage, redistribution, and ownership are subject to the requirements of Tocaan Company and the repository owner.
