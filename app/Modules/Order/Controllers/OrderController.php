@@ -8,11 +8,13 @@ use App\Modules\Order\Requests\StoreOrderRequest;
 use App\Modules\Order\Requests\UpdateOrderRequest;
 use App\Modules\Order\Resources\OrderResource;
 use App\Modules\Order\Services\Interfaces\IOrderService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class OrderController extends Controller
 {
+    use ResponseTrait;
+
     public function __construct(
         private readonly IOrderService $service
     ) {
@@ -20,12 +22,29 @@ class OrderController extends Controller
 
     public function index(
         IndexOrderRequest $request
-    ): AnonymousResourceCollection {
+    ): JsonResponse {
         $orders = $this->service->index(
             $request->validated()
         );
 
-        return OrderResource::collection($orders);
+        $ordersResource = OrderResource::collection($orders)
+            ->additional([
+                'pagination' => [
+                    'current_page' => $orders->currentPage(),
+                    'last_page' => $orders->lastPage(),
+                    'per_page' => $orders->perPage(),
+                    'total' => $orders->total(),
+                    'from' => $orders->firstItem(),
+                    'to' => $orders->lastItem(),
+                    'has_more_pages' => $orders->hasMorePages(),
+                ],
+            ]);
+
+        return $this->returnDataWithPagination(
+            'Orders retrieved successfully.',
+            200,
+            $ordersResource
+        );
     }
 
     public function store(
@@ -36,10 +55,11 @@ class OrderController extends Controller
             actorId: (int) $request->user()->getAuthIdentifier()
         );
 
-        return response()->json([
-            'message' => 'Order created successfully.',
-            'data' => new OrderResource($order),
-        ], 201);
+        return $this->returnData(
+            'Order created successfully.',
+            201,
+            new OrderResource($order)
+        );
     }
 
     public function update(
@@ -52,10 +72,11 @@ class OrderController extends Controller
             actorId: (int) $request->user()->getAuthIdentifier()
         );
 
-        return response()->json([
-            'message' => 'Order updated successfully.',
-            'data' => new OrderResource($updatedOrder),
-        ]);
+        return $this->returnData(
+            'Order updated successfully.',
+            200,
+            new OrderResource($updatedOrder)
+        );
     }
 
     public function destroy(
@@ -63,12 +84,15 @@ class OrderController extends Controller
     ): JsonResponse {
         $cancelledOrder = $this->service->delete(
             orderId: $order,
-            actorId: (int) request()->user()->getAuthIdentifier()
+            actorId: (int) request()
+                ->user()
+                ->getAuthIdentifier()
         );
 
-        return response()->json([
-            'message' => 'Order cancelled and deleted successfully.',
-            'data' => new OrderResource($cancelledOrder),
-        ]);
+        return $this->returnData(
+            'Order cancelled and deleted successfully.',
+            200,
+            new OrderResource($cancelledOrder)
+        );
     }
 }

@@ -24,9 +24,7 @@ return new class extends Migration
                 ->constrained('products')
                 ->nullOnDelete();
 
-            $table->string('product_name_ar', 150);
-            $table->string('product_name_en', 150);
-            $table->string('product_code', 50);
+  
 
             $table->unsignedInteger('quantity');
 
@@ -36,7 +34,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['order_id', 'product_id']);
-            $table->index('product_code');
         });
     }
 

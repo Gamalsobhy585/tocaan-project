@@ -86,9 +86,7 @@ Order history actions are stored as integers.
 | `id` | BIGINT | Primary key |
 | `order_id` | BIGINT | Foreign key to `orders` |
 | `product_id` | BIGINT, nullable | Foreign key to `products` |
-| `product_name_ar` | VARCHAR(150) | Arabic product-name snapshot |
-| `product_name_en` | VARCHAR(150) | English product-name snapshot |
-| `product_code` | VARCHAR(50) | Product-code snapshot |
+
 | `quantity` | UNSIGNED INTEGER | Ordered quantity |
 | `unit_price` | DECIMAL(15,2) | Product price when the order was created or updated |
 | `line_total` | DECIMAL(15,2) | `quantity × unit_price` |

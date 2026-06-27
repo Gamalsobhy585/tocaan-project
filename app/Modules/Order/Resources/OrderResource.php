@@ -69,10 +69,10 @@ class OrderResource extends JsonResource
                     : null
             ),
 
-            'cancelled_at' => $this->cancelled_at?->toISOString(),
-            'deleted_at' => $this->deleted_at?->toISOString(),
-            'created_at' => $this->created_at?->toISOString(),
-            'updated_at' => $this->updated_at?->toISOString(),
+                'cancelled_at' => $this->cancelled_at,
+                'deleted_at' => $this->deleted_at,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
         ];
     }
 }

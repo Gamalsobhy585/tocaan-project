@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Middleware\Lang;
+use App\Http\Middleware\Cors;
 
 
 Route::middleware(['lang', 'cors'])->group(function () {

@@ -7,20 +7,28 @@ use App\Models\Currency;
 use App\Modules\Currency\Requests\StoreCurrencyRequest;
 use App\Modules\Currency\Resources\CurrencyResource;
 use App\Modules\Currency\Services\Interfaces\ICurrencyService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CurrencyController extends Controller
 {
+    use ResponseTrait;
+
     public function __construct(
         private readonly ICurrencyService $service
     ) {
     }
 
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return CurrencyResource::collection(
+        $currencies = CurrencyResource::collection(
             $this->service->index()
+        );
+
+        return $this->returnData(
+            'Currencies retrieved successfully.',
+            200,
+            $currencies
         );
     }
 
@@ -30,10 +38,11 @@ class CurrencyController extends Controller
             $request->validated()
         );
 
-        return response()->json([
-            'message' => 'Currency added successfully.',
-            'data' => new CurrencyResource($currency),
-        ], 201);
+        return $this->returnData(
+            'Currency added successfully.',
+            201,
+            new CurrencyResource($currency)
+        );
     }
 
     public function toggleActive(Currency $currency): JsonResponse
@@ -42,12 +51,14 @@ class CurrencyController extends Controller
             $currency->id
         );
 
-        return response()->json([
-            'message' => $currency->is_active
-                ? 'Currency activated successfully.'
-                : 'Currency deactivated successfully.',
+        $message = $currency->is_active
+            ? 'Currency activated successfully.'
+            : 'Currency deactivated successfully.';
 
-            'data' => new CurrencyResource($currency),
-        ]);
+        return $this->returnData(
+            $message,
+            200,
+            new CurrencyResource($currency)
+        );
     }
 }

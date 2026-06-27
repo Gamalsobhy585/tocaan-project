@@ -1,6 +1,8 @@
 <?php
 
 use App\Console\Commands\GenerateModule;
+use App\Http\Middleware\Cors;
+use App\Http\Middleware\Lang;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,10 +17,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         GenerateModule::class,
     ])
-    ->withMiddleware(function (Middleware $middleware) {
-        //
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'lang' => Lang::class,
+            'cors' => Cors::class,
+        ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
+    ->withExceptions(function (Exceptions $exceptions): void {
         //
     })
     ->create();

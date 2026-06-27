@@ -40,6 +40,7 @@ class OrderRepository implements IOrderRepository
             ->with([
                 'currency:id,name_ar,name_en,code',
                 'items',
+                'items.product:id,name_ar,name_en,code',
                 'creator:id,name',
                 'updater:id,name',
                 'canceller:id,name',
@@ -99,7 +100,7 @@ class OrderRepository implements IOrderRepository
     {
         return $order->load([
             'currency:id,name_ar,name_en,code',
-            'items',
+            'items.product:id,name_ar,name_en,code',
             'histories.performer:id,name',
             'creator:id,name',
             'updater:id,name',

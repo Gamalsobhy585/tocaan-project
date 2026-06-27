@@ -7,20 +7,28 @@ use App\Models\PaymentMethod;
 use App\Modules\PaymentMethod\Requests\StorePaymentMethodRequest;
 use App\Modules\PaymentMethod\Resources\PaymentMethodResource;
 use App\Modules\PaymentMethod\Services\Interfaces\IPaymentMethodService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PaymentMethodController extends Controller
 {
+    use ResponseTrait;
+
     public function __construct(
         private readonly IPaymentMethodService $service
     ) {
     }
 
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return PaymentMethodResource::collection(
+        $paymentMethods = PaymentMethodResource::collection(
             $this->service->index()
+        );
+
+        return $this->returnData(
+            'Payment methods retrieved successfully.',
+            200,
+            $paymentMethods
         );
     }
 
@@ -31,10 +39,11 @@ class PaymentMethodController extends Controller
             $request->validated()
         );
 
-        return response()->json([
-            'message' => 'Payment method added successfully.',
-            'data' => new PaymentMethodResource($paymentMethod),
-        ], 201);
+        return $this->returnData(
+            'Payment method added successfully.',
+            201,
+            new PaymentMethodResource($paymentMethod)
+        );
     }
 
     public function toggleActive(
@@ -44,11 +53,14 @@ class PaymentMethodController extends Controller
             $paymentMethod
         );
 
-        return response()->json([
-            'message' => $paymentMethod->is_active
-                ? 'Payment method activated successfully.'
-                : 'Payment method deactivated successfully.',
-            'data' => new PaymentMethodResource($paymentMethod),
-        ]);
+        $message = $paymentMethod->is_active
+            ? 'Payment method activated successfully.'
+            : 'Payment method deactivated successfully.';
+
+        return $this->returnData(
+            $message,
+            200,
+            new PaymentMethodResource($paymentMethod)
+        );
     }
 }

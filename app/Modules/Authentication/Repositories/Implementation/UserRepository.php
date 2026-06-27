@@ -24,7 +24,7 @@ class UserRepository implements IUser
 
     public function getUserInfo()
     {
-        return auth()->user()->loadCount('posts'); 
+        return auth()->user(); 
     }
 
     

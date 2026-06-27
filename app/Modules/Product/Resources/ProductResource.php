@@ -18,8 +18,8 @@ class ProductResource extends JsonResource
             'quantity_in_stock' => (int) $this->quantity_in_stock,
             'unit_price' => (float) $this->unit_price,
 
-            'created_at' => $this->created_at?->toISOString(),
-            'updated_at' => $this->updated_at?->toISOString(),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

@@ -11,13 +11,18 @@ class OrderItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'product_id' => $this->product_id,
 
-            'product' => [
-                'name_ar' => $this->product_name_ar,
-                'name_en' => $this->product_name_en,
-                'code' => $this->product_code,
-            ],
+            'product' => $this->whenLoaded(
+                'product',
+                fn () => $this->product
+                    ? [
+                        'id' => $this->product->id,
+                        'name_ar' => $this->product->name_ar,
+                        'name_en' => $this->product->name_en,
+                        'code' => $this->product->code,
+                    ]
+                    : null
+            ),
 
             'quantity' => $this->quantity,
             'unit_price' => (float) $this->unit_price,

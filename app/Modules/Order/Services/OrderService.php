@@ -227,8 +227,8 @@ class OrderService implements IOrderService
             $products = $this->lockProducts($productIds);
 
             /*
-             * Cancelling the order returns its quantities to stock.
-             */
+            * Cancelling the order returns its quantities to stock.
+            */
             $this->restoreOrderStock(
                 $order,
                 $products
@@ -254,7 +254,7 @@ class OrderService implements IOrderService
                     'after' => $this->snapshot($order),
                 ],
                 'performed_by' => $actorId,
-              
+            
             ]);
 
             $this->repository->delete($order);
