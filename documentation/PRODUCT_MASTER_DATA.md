@@ -16,31 +16,6 @@ Each product contains:
 
 The current task uses permanent deletion for single and bulk delete operations. If products will later be referenced directly by order records, replace permanent deletion with soft deletion or an `is_active` flag.
 
-## Database Table
-
-Table name: `products`
-
-| Column | Type | Rules |
-|---|---|---|
-| `id` | BIGINT | Primary key |
-| `name_ar` | VARCHAR(150) | Required |
-| `name_en` | VARCHAR(150) | Required |
-| `code` | VARCHAR(50) | Required, unique |
-| `quantity_in_stock` | UNSIGNED INTEGER | Required, defaults to 0 |
-| `unit_price` | DECIMAL(15,2) | Required |
-| `created_at` | TIMESTAMP | Managed by Laravel |
-| `updated_at` | TIMESTAMP | Managed by Laravel |
-
-## API Operations
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| `GET` | `/api/products` | Return paginated products |
-| `POST` | `/api/products` | Add one product |
-| `POST` | `/api/products/import-bulk` | Import products from Excel or CSV |
-| `DELETE` | `/api/products/delete-bulk` | Permanently delete multiple products |
-| `DELETE` | `/api/products/{product}` | Permanently delete one product |
-
 ## Pagination
 
 Example:
@@ -124,26 +99,6 @@ php artisan db:seed --class=ProductSeeder
 
 The default seeder creates 50 product records.
 
-## Generation Commands
-
-```bash
-composer require maatwebsite/excel
-
-php artisan generate:module Product
-php artisan make:migration create_products_table
-php artisan make:factory ProductFactory --model=Product
-php artisan make:seeder ProductSeeder
-php artisan make:import ProductsImport --model=Product
-```
-
-The custom module generator creates generic CRUD files. Replace its generated Product controller, repository, service, requests, resource, model, and routes with the Product-specific implementations.
-
-## Service Container Bindings
-
-Register these bindings in `AppServiceProvider`:
-
-- `IProductRepository` to `ProductRepository`
-- `IProductService` to `ProductService`
 
 ## Business Rules
 

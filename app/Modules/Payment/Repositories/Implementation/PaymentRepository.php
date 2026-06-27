@@ -111,7 +111,6 @@ class PaymentRepository implements IPaymentRepository
                 'paymentMethod',
                 'currency',
                 'processor:id,name',
-                'histories.performer:id,name',
             ])
             ->findOrFail($paymentId);
     }

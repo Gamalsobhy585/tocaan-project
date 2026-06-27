@@ -13,21 +13,8 @@ The initial records are:
 | EUR | Euro | اليورو |
 | GBP | British Pound | الجنيه الإسترليني |
 
-> The requirement says three records, but four currency codes are listed. This module seeds all four listed currencies.
 
-## Database Table
 
-Table name: `currencies`
-
-| Column | Type | Rules |
-|---|---|---|
-| `id` | BIGINT | Primary key |
-| `name_ar` | VARCHAR(100) | Required |
-| `name_en` | VARCHAR(100) | Required |
-| `code` | CHAR(3) | Required, uppercase, unique |
-| `is_active` | BOOLEAN | Defaults to `true` |
-| `created_at` | TIMESTAMP | Managed by Laravel |
-| `updated_at` | TIMESTAMP | Managed by Laravel |
 
 Currencies are not deleted. They are enabled or disabled through `is_active`.
 
@@ -51,26 +38,6 @@ No update, show, or delete endpoints are exposed.
 
 The routes are expected to be protected by the configured JWT middleware.
 
-## Add Currency Request
-
-Example:
-
-```json
-{
-  "name_ar": "الريال السعودي",
-  "name_en": "Saudi Riyal",
-  "code": "SAR",
-  "is_active": true
-}
-```
-
-Validation rules:
-
-- `name_ar`: required string, maximum 100 characters.
-- `name_en`: required string, maximum 100 characters.
-- `code`: required alphabetic code, exactly 3 characters, unique.
-- `is_active`: optional boolean.
-- Currency codes are normalized to uppercase before validation.
 
 ## Redis Cache
 
@@ -114,24 +81,6 @@ php artisan db:seed
 
 The seeder uses `updateOrCreate`, so it can be run safely more than once.
 
-## Generation Commands
-
-```bash
-php artisan generate:module Currency
-php artisan make:migration create_currencies_table
-php artisan make:seeder CurrencySeeder
-```
-
-The custom module generator already creates the model, controller, request, resource, repository, service, and route files. Do not run `make:model Currency` after running `generate:module Currency`.
-
-## Dependency Bindings
-
-The following interfaces must be bound to their implementations in `AppServiceProvider`:
-
-- `ICurrencyRepository` → `CurrencyRepository`
-- `ICurrencyService` → `CurrencyService`
-
-Without these bindings, Laravel cannot inject the service and repository interfaces.
 
 ## Business Rules
 

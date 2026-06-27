@@ -3,7 +3,6 @@
 namespace App\Modules\Payment\Services;
 
 use App\Enums\OrderStatusEnum;
-use App\Enums\PaymentHistoryActionEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Order;
 use App\Models\Payment;
@@ -144,17 +143,7 @@ class PaymentService implements IPaymentService
                 'processed_by' => $actorId,
             ]);
 
-            $payment->histories()->create([
-                'old_status' => null,
-                'new_status' => PaymentStatusEnum::Pending,
-                'details' => [
-                    'amount' => $amount,
-                    'payment_method_id' => $paymentMethod->id,
-                    'strategy_key' => $paymentMethod->strategy_key,
-                ],
-                'performed_by' => $actorId,
-                'performed_by_name' => $this->actorName($actorId),
-            ]);
+          
 
             return [
                 'payment_id' => $payment->id,

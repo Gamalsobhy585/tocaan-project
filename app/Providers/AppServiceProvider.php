@@ -13,12 +13,6 @@ use App\Modules\Order\Repositories\Implementation\OrderRepository;
 use App\Modules\Order\Repositories\Interfaces\IOrderRepository;
 use App\Modules\Order\Services\Interfaces\IOrderService;
 use App\Modules\Order\Services\OrderService;
-use App\Modules\Payment\Gateways\Strategies\CreditCardGatewayStrategy;
-use App\Modules\Payment\Gateways\Strategies\PayPalGatewayStrategy;
-use App\Modules\PaymentMethod\Repositories\Implementation\PaymentMethodRepository;
-use App\Modules\PaymentMethod\Repositories\Interfaces\IPaymentMethodRepository;
-use App\Modules\PaymentMethod\Services\Interfaces\IPaymentMethodService;
-use App\Modules\PaymentMethod\Services\PaymentMethodService;
 use App\Modules\Product\Repositories\Implementation\ProductRepository;
 use App\Modules\Product\Repositories\Interfaces\IProductRepository;
 use App\Modules\Product\Services\Interfaces\IProductService;
@@ -41,14 +35,10 @@ class AppServiceProvider extends ServiceProvider
          $this->app->bind(ICurrencyService::class,CurrencyService::class);
          $this->app->bind(IProductRepository::class,ProductRepository::class);
          $this->app->bind(IProductService::class,ProductService::class);
-         $this->app->bind(IPaymentMethodRepository::class,PaymentMethodRepository::class);
-         $this->app->bind(IPaymentMethodService::class,PaymentMethodService::class);
          $this->app->bind(IOrderRepository::class,OrderRepository::class);
          $this->app->bind(IOrderService::class,OrderService::class);
 
-         $this->app->singleton(CreditCardGatewayStrategy::class);
-         $this->app->singleton(PayPalGatewayStrategy::class);
-        $this->app->tag([CreditCardGatewayStrategy::class,PayPalGatewayStrategy::class,], 'payment.gateway.strategies');
+       
 
 
     }

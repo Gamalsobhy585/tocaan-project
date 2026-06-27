@@ -111,4 +111,16 @@ trait ResponseTrait
 
         return $value;
     }
+    public function returnErrorData(
+    string $message,
+    int $statusCode,
+    mixed $data
+): JsonResponse {
+    return Response::json([
+        'status' => 'error',
+        'code' => $statusCode,
+        'message' => $message,
+        'data' => $this->formatDates($data),
+    ], $statusCode);
+}
 }

@@ -64,13 +64,12 @@ class PaymentResource extends JsonResource
                     : null
             ),
 
-            'processed_at' =>
-                $this->processed_at?->toISOString(),
+            'processed_at' => $this->processed_at,
 
           
 
-            'created_at' => $this->created_at?->toISOString(),
-            'updated_at' => $this->updated_at?->toISOString(),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

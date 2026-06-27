@@ -8,12 +8,14 @@ use App\Modules\Payment\Requests\IndexPaymentRequest;
 use App\Modules\Payment\Requests\ProcessPaymentRequest;
 use App\Modules\Payment\Resources\PaymentResource;
 use App\Modules\Payment\Services\Interfaces\IPaymentService;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PaymentController extends Controller
 {
+    use ResponseTrait;
+
     public function __construct(
         private readonly IPaymentService $service
     ) {
@@ -21,18 +23,35 @@ class PaymentController extends Controller
 
     public function index(
         IndexPaymentRequest $request
-    ): AnonymousResourceCollection {
-        return PaymentResource::collection(
-            $this->service->index(
-                $request->validated()
-            )
+    ): JsonResponse {
+        $payments = $this->service->index(
+            $request->validated()
+        );
+
+        $paymentsResource = PaymentResource::collection($payments)
+            ->additional([
+                'pagination' => [
+                    'current_page' => $payments->currentPage(),
+                    'last_page' => $payments->lastPage(),
+                    'per_page' => $payments->perPage(),
+                    'total' => $payments->total(),
+                    'from' => $payments->firstItem(),
+                    'to' => $payments->lastItem(),
+                    'has_more_pages' => $payments->hasMorePages(),
+                ],
+            ]);
+
+        return $this->returnDataWithPagination(
+            'Payments retrieved successfully.',
+            200,
+            $paymentsResource
         );
     }
 
     public function forOrder(
         Request $request,
         int $order
-    ): AnonymousResourceCollection {
+    ): JsonResponse {
         $validated = $request->validate([
             'per_page' => [
                 'nullable',
@@ -42,20 +61,41 @@ class PaymentController extends Controller
             ],
         ]);
 
-        return PaymentResource::collection(
-            $this->service->forOrder(
-                orderId: $order,
-                perPage: (int) (
-                    $validated['per_page'] ?? 15
-                )
-            )
+        $payments = $this->service->forOrder(
+            orderId: $order,
+            perPage: (int) ($validated['per_page'] ?? 15)
+        );
+
+        $paymentsResource = PaymentResource::collection($payments)
+            ->additional([
+                'pagination' => [
+                    'current_page' => $payments->currentPage(),
+                    'last_page' => $payments->lastPage(),
+                    'per_page' => $payments->perPage(),
+                    'total' => $payments->total(),
+                    'from' => $payments->firstItem(),
+                    'to' => $payments->lastItem(),
+                    'has_more_pages' => $payments->hasMorePages(),
+                ],
+            ]);
+
+        return $this->returnDataWithPagination(
+            'Order payments retrieved successfully.',
+            200,
+            $paymentsResource
         );
     }
 
-    public function show(Payment $payment): PaymentResource
+    public function show(Payment $payment): JsonResponse
     {
-        return new PaymentResource(
-            $this->service->show($payment->id)
+        $payment = $this->service->show(
+            $payment->id
+        );
+
+        return $this->returnData(
+            'Payment retrieved successfully.',
+            200,
+            new PaymentResource($payment)
         );
     }
 
@@ -71,12 +111,22 @@ class PaymentController extends Controller
                 ->getAuthIdentifier()
         );
 
-        return response()->json([
-            'message' => $payment->status->label()
-                === 'Successful'
-                ? 'Payment processed successfully.'
-                : 'Payment processing failed.',
-            'data' => new PaymentResource($payment),
-        ], $payment->status->value === 1 ? 201 : 422);
+        $paymentResource = new PaymentResource($payment);
+
+        $isSuccessful = $payment->status->value === 1;
+
+        if (!$isSuccessful) {
+            return $this->returnErrorData(
+                'Payment processing failed.',
+                422,
+                $paymentResource
+            );
+        }
+
+        return $this->returnData(
+            'Payment processed successfully.',
+            201,
+            $paymentResource
+        );
     }
 }

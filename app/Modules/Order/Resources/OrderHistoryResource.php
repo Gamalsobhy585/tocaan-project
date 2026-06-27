@@ -39,7 +39,7 @@ class OrderHistoryResource extends JsonResource
                    ,
             ],
 
-            'created_at' => $this->created_at?->toISOString(),
+            'created_at' => $this->created_at,
         ];
     }
 }
