@@ -7,7 +7,6 @@ The project provides authentication, product and currency master data, order man
 ## Project Links
 
 * **GitHub Repository:** [Gamalsobhy585/tocaan-project](https://github.com/Gamalsobhy585/tocaan-project)
-* **API Documentation:** [Tocaan Project Documentation](https://gamalsobhy585.github.io/tocaan-project/)
 * **Postman Workspace:** [Tocaan API Workspace](https://martian-shadow-736975.postman.co/workspace/1fe9452d-f7b9-4ca3-a0a5-8e15ccfa4db8)
 
 ---
@@ -47,7 +46,6 @@ Optional tools:
 
 * Postman
 * Docker
-* Node.js and npm, if frontend assets are required
 
 ---
 
@@ -168,7 +166,6 @@ Main operations include:
 * Register
 * Login
 * Logout
-* Refresh token
 * Retrieve authenticated user information
 
 Protected endpoints require a valid JWT token.
@@ -189,10 +186,7 @@ Main operations include:
 
 * Create a currency
 * View currencies
-* View a specific currency
-* Update a currency
-* Delete a currency
-* Seed initial currency records
+* toggle cureency field (is_active)
 
 ---
 
@@ -207,15 +201,12 @@ A product may contain information such as:
 * Product code
 * Available stock quantity
 * Unit price
-* Associated currency
 
 Main operations include:
 
 * Create a product
 * View products
 * Filter and paginate products
-* View a specific product
-* Update a product
 * Delete a product
 * Import product data
 * Seed initial product records
@@ -537,12 +528,7 @@ JSON Response
 * Laravel Form Requests
 * Laravel API Resources
 * Laravel Service Container
-* PHPUnit
 * Postman
-* Jekyll
-* Just the Docs
-* GitHub Pages
-* GitHub Actions
 
 ---
 Important environment variables include:
@@ -729,42 +715,6 @@ Resources help prevent exposing unnecessary model fields and keep API responses 
 
 ---
 
-## Testing
-
-Run all automated tests:
-
-```bash
-php artisan test
-```
-
-Run tests with more detailed output:
-
-```bash
-php artisan test --testdox
-```
-
-Run a specific test class:
-
-```bash
-php artisan test --filter=PaymentTest
-```
-
-Recommended test coverage includes:
-
-* Authentication
-* Currency operations
-* Product operations
-* Order creation and updates
-* Order status filtering
-* Payment-method management
-* Successful payment processing
-* Failed payment processing
-* Gateway-strategy resolution
-* Adding a new payment gateway
-* Validation errors
-* Unauthorized access
-
----
 
 ## Documentation Structure
 
@@ -800,50 +750,7 @@ documentation/
     └── TESTING.md
 ```
 
-The documentation is published using:
 
-* Jekyll
-* Just the Docs
-* GitHub Pages
-* GitHub Actions
-
-Published documentation URL:
-
-https://gamalsobhy585.github.io/tocaan-project/
-
----
-
-## GitHub Pages Deployment
-
-The project uses a custom GitHub Actions workflow because the documentation source is stored inside:
-
-```text
-documentation/
-```
-
-The workflow file should exist at:
-
-```text
-.github/workflows/documentation-pages.yml
-```
-
-To deploy the documentation:
-
-1. Push the documentation and workflow files to the `main` branch.
-2. Open the GitHub repository.
-3. Go to **Settings**.
-4. Open **Pages**.
-5. Select **GitHub Actions** as the publishing source.
-6. Open the **Actions** tab.
-7. Check that the build and deployment jobs complete successfully.
-
-The published website will be available at:
-
-```text
-https://gamalsobhy585.github.io/tocaan-project/
-```
-
----
 
 ## Useful Artisan Commands
 
