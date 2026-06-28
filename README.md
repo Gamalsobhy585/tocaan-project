@@ -152,8 +152,28 @@ http://127.0.0.1:8000
 
 ## Environment Configuration
 
+Important environment variables include:
 
+```env
+APP_NAME="Tocaan Project"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
 
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tocaan_project
+DB_USERNAME=root
+DB_PASSWORD=
+
+JWT_SECRET=
+```
+
+Do not commit the `.env` file or expose database passwords and JWT secrets.
+
+---
 
 ## Main Features
 
@@ -186,7 +206,7 @@ Main operations include:
 
 * Create a currency
 * View currencies
-* toggle cureency field (is_active)
+* Toggle currency field (is_active)
 
 ---
 
@@ -531,28 +551,6 @@ JSON Response
 * Postman
 
 ---
-Important environment variables include:
-
-```env
-APP_NAME="Tocaan Project"
-APP_ENV=local
-APP_KEY=
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=tocaan_project
-DB_USERNAME=root
-DB_PASSWORD=
-
-JWT_SECRET=
-```
-
-Do not commit the `.env` file or expose database passwords and JWT secrets.
-
----
 
 ## API Usage
 
@@ -715,7 +713,6 @@ Resources help prevent exposing unnecessary model fields and keep API responses 
 
 ---
 
-
 ## Documentation Structure
 
 The project documentation is stored in:
@@ -750,7 +747,134 @@ documentation/
     └── TESTING.md
 ```
 
+---
 
+## Testing
+
+The project includes feature tests and unit tests covering the Currency module.
+
+### Test Structure
+
+```text
+tests/
+├── Feature/
+│   └── Modules/
+│       └── Currency/
+│           └── CurrencyControllerTest.php
+└── Unit/
+    └── Modules/
+        └── Currency/
+            ├── CurrencyServiceTest.php
+            └── CurrencyRepositoryTest.php
+```
+
+### Test Types
+
+**Feature tests** exercise the full HTTP stack end-to-end, including routing, middleware, JWT authentication, validation, service and repository layers, cache behavior, and JSON response shape.
+
+**Unit tests** test individual classes in isolation. The service tests mock the repository using Mockery so no database is touched. The repository tests run against the test database directly using `RefreshDatabase`.
+
+### Environment Setup for Testing
+
+Create a dedicated test database and configure it in `phpunit.xml`:
+
+```xml
+<env name="DB_CONNECTION" value="mysql"/>
+<env name="DB_DATABASE" value="tocaan_project_test"/>
+<env name="CACHE_STORE" value="array"/>
+```
+
+Using `CACHE_STORE=array` in tests replaces the Redis cache with an in-memory array store, so no Redis connection is required to run the suite.
+
+Alternatively, override only what is needed in `.env.testing`:
+
+```env
+DB_DATABASE=tocaan_project_test
+CACHE_STORE=array
+```
+
+### Running the Tests
+
+Run the full test suite:
+
+```bash
+php artisan test
+```
+
+Run only the Currency module:
+
+```bash
+php artisan test --filter=Currency
+```
+
+Run a specific test file:
+
+```bash
+php artisan test tests/Feature/Modules/Currency/CurrencyControllerTest.php
+php artisan test tests/Unit/Modules/Currency/CurrencyServiceTest.php
+php artisan test tests/Unit/Modules/Currency/CurrencyRepositoryTest.php
+```
+
+Run a single test method:
+
+```bash
+php artisan test --filter=it_activates_an_inactive_currency
+```
+
+Run with code coverage (requires Xdebug or PCOV):
+
+```bash
+php artisan test --coverage
+php artisan test --coverage --min=80
+```
+
+### What Is Tested
+
+#### CurrencyControllerTest (Feature)
+
+| Area | Scenarios |
+|---|---|
+| `GET /currencies` | Returns all currencies ordered by code; empty collection; serves from Redis cache on repeated requests |
+| `POST /currencies` | Creates with valid data; rejects duplicate code; rejects code longer than 3 characters; requires each mandatory field |
+| `PATCH /currencies/{id}/toggle` | Activates an inactive currency; deactivates an active currency; invalidates Redis cache after toggle; returns 404 for a missing ID |
+
+#### CurrencyServiceTest (Unit)
+
+| Method | Scenarios |
+|---|---|
+| `index` | Fetches from repository on cache miss; returns cached value without hitting the repository |
+| `add` | Delegates to repository and returns the created model; clears the Redis cache after creation |
+| `toggleActive` | Delegates to repository and returns the updated model; clears the Redis cache after toggle |
+
+#### CurrencyRepositoryTest (Unit)
+
+| Method | Scenarios |
+|---|---|
+| `getAll` | Returns all records ordered by code; returns an empty collection when the table is empty; includes both active and inactive records |
+| `create` | Persists the record and returns the model; defaults `is_active` to `true` from the database column default |
+| `toggleActive` | Flips `true` to `false`; flips `false` to `true`; returns a refreshed model reflecting the new state; throws `ModelNotFoundException` for a missing ID; maintains correct state under successive toggles (transaction integrity) |
+
+### Authentication in Tests
+
+All feature tests authenticate using JWT. A user is created in `setUp` and a token is generated via:
+
+```php
+$this->token = JWTAuth::fromUser($user);
+```
+
+Each request includes the token as a Bearer header:
+
+```php
+$this->getJson($url, ['Authorization' => "Bearer {$this->token}"]);
+```
+
+### Notes
+
+- `RefreshDatabase` rolls back all database changes after each test, so tests are fully isolated.
+- The `CurrencyFactory` excludes the codes seeded by `CurrencySeeder` (`USD`, `EGP`, `EUR`, `GBP`) to avoid unique-constraint collisions when the seeder and factory are used in the same test.
+- The repository's `create` method calls `->refresh()` after insert so that database-level column defaults (such as `is_active = true`) are reflected on the returned model immediately.
+
+---
 
 ## Useful Artisan Commands
 

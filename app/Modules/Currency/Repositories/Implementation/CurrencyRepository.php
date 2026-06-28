@@ -18,7 +18,7 @@ class CurrencyRepository implements ICurrencyRepository
 
     public function create(array $data): Currency
     {
-        return Currency::query()->create($data);
+        return Currency::query()->create($data)->refresh(); 
     }
 
     public function toggleActive(int $currencyId): Currency
